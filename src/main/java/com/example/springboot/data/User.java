@@ -1,7 +1,11 @@
 package com.example.springboot.data;
+import com.example.springboot.dto.UserDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+
+import java.util.List;
+import java.util.UUID;
 
 public class User {
     @Id
@@ -16,11 +20,22 @@ public class User {
 
     private String createdAt;
 
-    public User(){
+    private String passwordHash;
 
+    private List<RoleEnum> roles;
+
+    public User(){
+        this.id = UUID.randomUUID().toString();
     }
-    public User(String id, String name, String email, String lastName, String createdAt) {
-        this.id = id;
+
+    public User(UserDto userDto){
+        this.name = userDto.getName();
+        this.email = userDto.getEmail();
+        this.lastName = userDto.getLastName();
+        this.passwordHash = BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt());
+    }
+    public User(String name, String email, String lastName, String createdAt) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.email = email;
         this.lastName = lastName;
@@ -65,5 +80,30 @@ public class User {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+
+    public String getPassword() {
+        return passwordHash;
+    }
+
+    public void setPassword(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+    public void update(UserDto user) {
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.lastName = user.getLastName();
+        if (user.getPassword() != null) {
+            this.passwordHash = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        }
+    }
+
+    public List<RoleEnum> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleEnum> roles) {
+        this.roles = roles;
     }
 }

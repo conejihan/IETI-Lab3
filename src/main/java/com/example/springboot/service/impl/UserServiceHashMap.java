@@ -4,6 +4,7 @@ import com.example.springboot.data.User;
 
 import com.example.springboot.dto.UserDto;
 import com.example.springboot.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,19 +46,12 @@ public class UserServiceHashMap implements UserService {
     @Override
     public User update(UserDto userdto, String userId) {
         User user = users.get(userId);
-        user.setName(userdto.getName());
-        user.setLastName(userdto.getLastName());
-        user.setEmail(userdto.getEmail());
+        user.update(userdto);
         return user;
     }
 
     @Override
-    public List<User> findUsersWithNameOrLastNameLike(String queryText) {
-        return null;
-    }
-
-    @Override
-    public List<User> findUsersCreatedAfter(Date startDate) {
+    public User findByEmail(String email) {
         return null;
     }
 }

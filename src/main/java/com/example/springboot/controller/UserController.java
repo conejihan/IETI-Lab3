@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
@@ -41,7 +42,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> create( @RequestBody UserDto userDto ) {
         try {
-            User user = new User("", userDto.getName(), userDto.getEmail(), userDto.getLastName(), "");
+            User user = new User(userDto.getName(), userDto.getEmail(), userDto.getLastName(), "");
             return new ResponseEntity<>(userService.create(user), HttpStatus.ACCEPTED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -58,7 +59,9 @@ public class UserController {
         }
     }
 
+
     @DeleteMapping( "/{id}" )
+    @RolesAllowed("ADMIN")
     public ResponseEntity<?> delete( @PathVariable String id ) {
         try{
             userService.deleteById(id);

@@ -18,4 +18,5 @@ public interface UserService {
 
     User update(UserDto userDto, String userId );
 
+    User findByEmail(String email);
 }
